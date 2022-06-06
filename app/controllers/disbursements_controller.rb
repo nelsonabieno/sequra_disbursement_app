@@ -7,7 +7,7 @@ class DisbursementsController < ApplicationController
   end
 
   private
-
+  # finds a merchant based on the merchant id
   def merchant
     Merchant.find(disbursement_params[:merchant_id])
   end

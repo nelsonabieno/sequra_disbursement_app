@@ -16,6 +16,7 @@ class Disbursement < ActiveRecord::Base
 
   # get merchant orders for a given week
   def self.calculate_weekly_orders!(merchant: nil, date: Date.today)
+    begin
       start_date = date.beginning_of_week
       end_date = date.end_of_week
 
@@ -23,18 +24,26 @@ class Disbursement < ActiveRecord::Base
         disbursement = store_disbursement(merchant, start_date, end_date)
         return  { disburse_amount: disbursement.disbursed_amount, merchant_id: merchant.id }
       else
-        # TODO: Add logic to calculate disbursements for all merchants
+        results = []
+        Merchant.all.each do |merchant|
+          disbursement = store_disbursement(merchant, start_date, end_date)
+          results << { disburse_amount: disbursement.disbursed_amount, merchant_id: merchant.id }
+        end
+        return results
       end
+    rescue StandardError => e
+      puts e.message
+    end
   end
 
   # store_disbursement try to find disbursement
   # based on start and end date provided
   # method create a disbursement if none is found
   def self.store_disbursement(merchant, start_date, end_date)
-    find_or_create_by(start_date: start_date,end_date: end_date, merchant_id: merchant.id) do |dis|
+    find_or_create_by(start_date: start_date,end_date: end_date, merchant_id: merchant.id) do |disbursement|
       week_completed_orders = merchant.orders.completed.date_range(start_date, end_date)
       total = week_completed_orders.sum{ |order| disbursed_amount(order.amount) }
-      dis.disbursed_amount = total
+      disbursement.disbursed_amount = total
     end
   end
 end
