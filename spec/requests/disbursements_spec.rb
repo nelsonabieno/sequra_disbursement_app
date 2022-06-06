@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Disbursements", type: :request do
   # initialize test data
-  let!(:date) { order.first.completed_at }
-  let(:merchant_id) { merchant.first.id }
+  let!(:merchant) { create(:merchant) }
+  let!(:shopper) { create(:shopper) }
+  let!(:order) { create(:order) }
+  let!(:date) { order.completed_at }
+  let(:merchant_id) { merchant.id }
 
   # Test suite for GET /disbursements
   describe 'GET /disbursements' do
