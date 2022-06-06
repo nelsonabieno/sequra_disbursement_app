@@ -2,7 +2,7 @@ class DisbursementsController < ApplicationController
   # returns the total disbursements for a given merchant
   def index
     disbursements = Disbursement.calculate_weekly_orders!(merchant: merchant, date: Date.parse(disbursement_params[:date]))
-    result = disbursements.disbursed_amount
+    result = disbursements[:disburse_amount]
     render json: { total_disbursement: result }
   end
 

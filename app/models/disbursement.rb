@@ -14,7 +14,9 @@ class Disbursement < ActiveRecord::Base
     end
   end
 
-  # get merchant orders for a given week
+  # calculate and return merchant disbursements for a given week for a merchant
+  # if no given merchant id is provided
+  # it calculates and returns disbursements for all the merchants
   def self.calculate_weekly_orders!(merchant: nil, date: Date.today)
     begin
       start_date = date.beginning_of_week

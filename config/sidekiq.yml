@@ -1,0 +1,4 @@
+:schedule:
+  disbursement_calculation_job:
+    cron: '0 0 * * 1'   # At 00:00 on Monday.
+    class: DisbursementCalculationJob
